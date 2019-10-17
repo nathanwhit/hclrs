@@ -19,13 +19,18 @@ use lexer::Lexer;
 use lexer::LAST_LOC;
 use parser::StatementsParser;
 use std::panic::catch_unwind;
+use std::io::Read;
 
 pub use errors::Error;
 pub use program::{Program, RunningProgram, RunOptions};
 pub use io::FileContents;
 
-pub fn read_y86_hcl(path: &Path) -> Result<FileContents, Error> {
+pub fn read_y86_hcl_file(path: &Path) -> Result<FileContents, Error> {
     FileContents::new_from_file_with_preamble(program::Y86_PREAMBLE, path)
+}
+
+pub fn read_y86_hcl<R: Read>(source: R) -> Result<FileContents, Error> {
+    FileContents::new_with_preamble(program::Y86_PREAMBLE, source)
 }
 
 pub fn parse_y86_hcl(contents: &FileContents) -> Result<Program, Error> {

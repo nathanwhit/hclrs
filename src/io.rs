@@ -53,6 +53,19 @@ impl FileContents {
         Ok(FileContents::new_from_data(preamble, &String::from_utf8_lossy(&file_bytes), &filename))
     }
 
+    pub fn new_with_preamble<R: Read>(preamble: &str, source: R) -> Result<FileContents, Error> {
+        let mut buf_reader = BufReader::new(source);
+        let mut bytes = Vec::new();
+        buf_reader.read_to_end(&mut bytes)?;
+        match str::from_utf8(&bytes) {
+            Ok(_) => {}
+            Err(_) => {
+                warn!("input is not valid UTF-8");
+            }
+        };
+        Ok(FileContents::new_from_data(preamble, &String::from_utf8_lossy(&bytes), "<unknown>"))
+    }
+
     pub fn new_from_file(path: &Path) -> Result<FileContents, Error> {
         FileContents::new_from_file_with_preamble("\n", path)
     }

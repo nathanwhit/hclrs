@@ -101,7 +101,7 @@ fn main_real() -> Result<bool, Error> {
     }
     let filename: &str = &free_args[0];
     let path = Path::new(filename);
-    let file_contents = match read_y86_hcl(path) {
+    let file_contents = match read_y86_hcl_file(path) {
         Err(e) => {
             writeln!(stderr(), "Error reading '{}': {}", path.display(), e).unwrap();
             return Ok(false)
